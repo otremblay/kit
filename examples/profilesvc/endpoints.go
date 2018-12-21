@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/kit/log"
 	httptransport "github.com/go-kit/kit/transport/http"
 )
 
@@ -38,17 +39,17 @@ type Endpoints struct {
 // MakeServerEndpoints returns an Endpoints struct where each endpoint invokes
 // the corresponding method on the provided service. Useful in a profilesvc
 // server.
-func MakeServerEndpoints(s Service) Endpoints {
+func MakeServerEndpoints(s Service, logger log.Logger) Endpoints {
 	return Endpoints{
-		PostProfileEndpoint:   MakePostProfileEndpoint(s),
-		GetProfileEndpoint:    MakeGetProfileEndpoint(s),
-		PutProfileEndpoint:    MakePutProfileEndpoint(s),
-		PatchProfileEndpoint:  MakePatchProfileEndpoint(s),
-		DeleteProfileEndpoint: MakeDeleteProfileEndpoint(s),
-		GetAddressesEndpoint:  MakeGetAddressesEndpoint(s),
-		GetAddressEndpoint:    MakeGetAddressEndpoint(s),
-		PostAddressEndpoint:   MakePostAddressEndpoint(s),
-		DeleteAddressEndpoint: MakeDeleteAddressEndpoint(s),
+		PostProfileEndpoint:   LoggingMiddleware(logger)(MakePostProfileEndpoint(s)),
+		GetProfileEndpoint:    LoggingMiddleware(logger)(MakeGetProfileEndpoint(s)),
+		PutProfileEndpoint:    LoggingMiddleware(logger)(MakePutProfileEndpoint(s)),
+		PatchProfileEndpoint:  LoggingMiddleware(logger)(MakePatchProfileEndpoint(s)),
+		DeleteProfileEndpoint: LoggingMiddleware(logger)(MakeDeleteProfileEndpoint(s)),
+		GetAddressesEndpoint:  LoggingMiddleware(logger)(MakeGetAddressesEndpoint(s)),
+		GetAddressEndpoint:    LoggingMiddleware(logger)(MakeGetAddressEndpoint(s)),
+		PostAddressEndpoint:   LoggingMiddleware(logger)(MakePostAddressEndpoint(s)),
+		DeleteAddressEndpoint: LoggingMiddleware(logger)(MakeDeleteAddressEndpoint(s)),
 	}
 }
 

@@ -27,7 +27,7 @@ var (
 // Useful in a profilesvc server.
 func MakeHTTPHandler(s Service, logger log.Logger) http.Handler {
 	r := mux.NewRouter()
-	e := MakeServerEndpoints(s)
+	e := MakeServerEndpoints(s, logger)
 	options := []httptransport.ServerOption{
 		httptransport.ServerErrorLogger(logger),
 		httptransport.ServerErrorEncoder(encodeError),
